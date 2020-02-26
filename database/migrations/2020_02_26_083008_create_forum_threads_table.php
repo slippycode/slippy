@@ -21,6 +21,9 @@ class CreateForumThreadsTable extends Migration
             $table->string('slug')->unique();
             $table->text('content');
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('category_id')->references('id')->on('forum_categories')->onDelete('cascade');
         });
     }
 

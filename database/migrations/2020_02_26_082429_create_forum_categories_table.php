@@ -19,6 +19,8 @@ class CreateForumCategoriesTable extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->timestamps();
+
+            $table->foreign('parent_id')->references('id')->on('forum_categories')->onDelete('cascade');
         });
     }
 
