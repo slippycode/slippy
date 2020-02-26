@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Request;
 
 class LoginController extends Controller
 {
@@ -28,6 +29,8 @@ class LoginController extends Controller
      */
     protected $redirectTo = RouteServiceProvider::HOME;
 
+    protected $loginType;
+
     /**
      * Create a new controller instance.
      *
@@ -36,5 +39,21 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
+        $this->loginType = $this->detectLogin();
+    }
+
+    public function detectLogin()
+    {
+        $login = Request::input('login');
+        $type = filter_var($login, FILTER_VALIDATE_EMAIL) ? 'email' : 'username';
+        Request::merge([
+            $type => $login,
+        ]);
+        return $type;
+    }
+
+    public function username()
+    {
+        return $this->loginType;
     }
 }
